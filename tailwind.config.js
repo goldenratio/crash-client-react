@@ -7,7 +7,7 @@ export default {
 			animation: {
         wiggle: 'wiggle 1s ease-in-out',
         fadeIn: 'fadeIn 1s linear',
-        pulse: 'pulse 2s ease-in-out',
+        pulse: 'pulse 1s ease-in-out 0.2s forwards',
       },
 			keyframes: {
         wiggle: {

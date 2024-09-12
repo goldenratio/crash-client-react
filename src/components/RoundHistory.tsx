@@ -14,7 +14,7 @@ export function RoundHistory() {
       const seq: number = history[0] ? history[0].id + 1 : 0;
       const val = [{ value: newMultiplier, id: seq }, ...history].slice(0, 20);
       setHistory(val);
-    }, 5000);
+    }, 1000);
 
   //Clearing the interval
     return () => clearInterval(timerId);
@@ -27,7 +27,7 @@ export function RoundHistory() {
             {history.map(({ value, id }) => (
               <div
                 key={id}
-                className="transition-all duration-300 ease-in-out animate-pulse"
+                className="transition-all duration-300 scale-0 linear animate-pulse"
               >
                 <Badge
                   variant="secondary"
