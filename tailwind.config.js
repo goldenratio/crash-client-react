@@ -6,7 +6,7 @@ export default {
   	extend: {
 			animation: {
         wiggle: 'wiggle 1s ease-in-out',
-        fadeIn: 'fadeIn 1s linear',
+        fadeIn: 'fadeIn 1s linear forwards',
         pulse: 'pulse 1s ease-in-out 0.2s forwards',
       },
 			keyframes: {
@@ -15,12 +15,12 @@ export default {
           '50%': { transform: 'rotate(3deg)' },
         },
 				fadeIn: {
-					from: { opacity: 0 },
-					to: { opacity: 1 }
+					'0%': { opacity: 0 },
+					'100%': { opacity: 1 }
 				},
 				pulse: {
 					'0%': { transform: 'scale(0)', opacity: 0 },
-					'50%': { transform: 'scale(1.1)' },
+					'50%': { transform: 'scale(1.1)', opacity: 0.5 },
 					'100%': { transform: 'scale(1)', opacity: 1 }
 			}
       },
