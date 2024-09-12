@@ -1,0 +1,89 @@
+namespace GameplayFBData;
+
+table JoinGameRequest {
+  player_uuid: string;
+  jwt_token: string;
+}
+
+table BetRequest {
+  bet_amount: uint64;
+}
+
+table CrashOutRequest {}
+
+union RequestMessages { JoinGameRequest, BetRequest, CrashOutRequest }
+
+table GameRequestEvent {
+  msg: RequestMessages;
+}
+
+table JoinGameResponse {
+  game_state: uint8;
+  betting_time_left: uint32;
+  round_time_elapsed: uint32;
+  multiplier: uint32;
+  display_name: string;
+  balance: uint64;
+}
+
+table BettingTimerStarted {
+  betting_time_left: uint32;
+  round_id: uint32;
+  server_seed_hash: string;
+  next_round_server_seed_hash: string;
+}
+
+table BettingTimerUpdate {
+  betting_time_left: uint32;
+}
+
+table RemotePlayerJoined {
+  display_name: string;
+  players_online: uint32;
+}
+
+table RemotePlayerLeft {
+  display_name: string;
+  players_online: uint32;
+}
+
+table RemotePlayerBetsPlaced {
+  display_name: string;
+  bet_amount: uint64;
+}
+
+table RemotePlayerCrashOut {
+  display_name: string;
+  win_amount: uint64;
+}
+
+table CrashOutResponse {
+  win_amount: uint64;
+  /// final multiplier
+  multiplier: uint32;
+  balance: uint64;
+}
+
+table GameStarted {}
+
+table GameUpdate {
+  multiplier: uint32;
+}
+
+table GameFinished {}
+
+table GameError {}
+
+union ResponseMessage {
+  JoinGameResponse,
+  BettingTimerStarted, BettingTimerUpdate,
+  GameStarted, GameUpdate, GameFinished, GameError,
+  CrashOutResponse,
+  RemotePlayerJoined, RemotePlayerLeft, RemotePlayerBetsPlaced, RemotePlayerCrashOut
+}
+
+table GameResponseEvent {
+  msg: ResponseMessage;
+}
+
+root_type GameRequestEvent;
