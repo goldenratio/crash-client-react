@@ -9,12 +9,17 @@ export type AuthResponseType =
   | { success: true; jwtToken: string; uuid: string; displayName: string };
 
 export type GameJoinedData = {
+  type: 'success';
   gameState: GameState;
   bettingTimeLeft: number;
   multiplier: number;
   roundTimeElapsed: number;
   displayName: string;
   balance: number;
+};
+
+export type GameJoinError = {
+  type: 'error'
 };
 
 export type ConnectionClosedData = { errorCode: number; reason: string };

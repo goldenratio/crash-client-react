@@ -5,6 +5,9 @@ import { randomFloat, roundToTwoDecimals } from "@/utils/math-utils";
 
 type RoundHistoryData = { value: number; id: number };
 
+// todo: improve animation based on this,
+// https://codesandbox.io/p/sandbox/animated-lists-with-react-and-framer-motion-jfwv3?file=%2Fsrc%2FApp.js%3A45%2C33
+
 export function RoundHistory() {
   const [history, setHistory] = useState<RoundHistoryData[]>([]);
 
@@ -14,7 +17,7 @@ export function RoundHistory() {
       const seq: number = history[0] ? history[0].id + 1 : 0;
       const val = [{ value: newMultiplier, id: seq }, ...history].slice(0, 20);
       setHistory(val);
-    }, 1000);
+    }, 5000);
 
   //Clearing the interval
     return () => clearInterval(timerId);

@@ -4,3 +4,55 @@
   padding: 2rem;
   text-align: center;
 }
+
+.bet-area-container {
+  /* background-color: hsl(var(--secondary)) !important; */
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  min-height: fit-content;
+  border-radius: 0.75rem;
+  padding: 0.75rem;
+}
+
+.bet-select-container {
+  width: 200px;
+  height: 100%;
+  display: flex;
+  justify-content: center;   /* Centers horizontally */
+  align-items: center;       /* Centers vertically */
+  margin-right: 10px;
+}
+
+.bet-select-holder {
+  display: flex;
+  justify-content: space-around; /* Distribute buttons evenly */
+  align-items: center;           /* Center buttons vertically */
+  flex-wrap: wrap;               /* Allow buttons to wrap if needed */
+  width: 100%;                   /* Make it responsive based on parent width */
+}
+
+.bet-area-button {
+  background-color: #28a909;
+  border-color: #b2f2a3;
+  border-style: solid;
+  border-width: 0.14rem;
+  float: left;
+  width: 200px;
+  min-height: 80px;
+  height: 100%;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.game-canvas-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 400px;
+}

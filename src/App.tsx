@@ -5,7 +5,9 @@ import { RoundHistory } from './components/RoundHistory'
 import { GameCanvasArea } from './components/GameCanvasArea';
 import { ThemeProvider } from './components/ThemeProvider';
 
+import { gameplay } from './models/gameplay/gameplay';
 
+gameplay;
 
 function App() {
 

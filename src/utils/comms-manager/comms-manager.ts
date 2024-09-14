@@ -27,6 +27,7 @@ import {
   type CrashOutResultData,
   type GameFinishedData,
   type GameJoinedData,
+  GameJoinError,
   type GameStartedData,
   GameState,
   type GameUpdateData,
@@ -58,17 +59,17 @@ export class CommsManager {
   private _socket: WebSocket | undefined;
 
   constructor() {
-    console.log("socket connection!");
-    this.connect();
+    // console.log("socket connection!");
+    // this.connect();
   }
 
-  async connect(): Promise<void> {
+  async connect(): Promise<GameJoinedData | GameJoinError> {
     return new Promise(async (resolve) => {
       const authResponse = await this.getAuthToken();
       if (!authResponse.success) {
         this._gameJoinErrorSubject$.next();
         this._gameJoinErrorSubject$.complete();
-        return resolve();
+        return resolve({ type: 'error' });
       }
 
       this._socket = new WebSocket(`${baseWsGamePath}/crash-game`);
@@ -116,15 +117,21 @@ export class CommsManager {
             const joinData = JoinGameResponse.getRootAsJoinGameResponse(buffer);
             const msg: JoinGameResponse = gameResponseEvent.msg(joinData);
 
-            this._gameJoinedSubject$.next({
+            const responseData: GameJoinedData = {
+              type: 'success',
               gameState: msg.gameState(),
               bettingTimeLeft: msg.bettingTimeLeft(),
               multiplier: msg.multiplier(),
               roundTimeElapsed: msg.roundTimeElapsed(),
               displayName: msg.displayName() || "guest",
               balance: Number(msg.balance()),
-            });
+            };
+
+            this._gameJoinedSubject$.next(responseData);
             this._gameJoinedSubject$.complete();
+
+            resolve(responseData);
+
             break;
           }
 
@@ -218,7 +225,7 @@ export class CommsManager {
         this._closedSubject$.next(data);
       });
 
-      resolve();
+      // resolve();
     });
   }
 
