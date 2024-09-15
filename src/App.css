@@ -35,11 +35,12 @@
 
 .bet-area-button {
   background-color: #28a909;
-  border-color: #b2f2a3;
+  /* border-color: #b2f2a3;
   border-style: solid;
-  border-width: 0.14rem;
+  border-width: 0.14rem; */
+  outline: 2px solid #b2f2a3;
   float: left;
-  width: 200px;
+  width: 100%;
   min-height: 80px;
   height: 100%;
   border-radius: 20px;
@@ -47,6 +48,11 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  /* cursor: pointer; */
+}
+
+.bet-area-button:hover {
+  background-color: #38c415;
 }
 
 .game-canvas-container {

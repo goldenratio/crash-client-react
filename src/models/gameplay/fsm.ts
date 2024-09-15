@@ -61,6 +61,7 @@ export const gameplayMachine = createMachine({
       on: {
         BETTING_TIMER_OVER: { target: 'gameRoundInProgress' },
         BETTING_TIMER_UPDATE: { },
+        PLACE_BETS: {}
       }
     },
 

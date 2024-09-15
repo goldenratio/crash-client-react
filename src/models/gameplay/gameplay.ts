@@ -1,6 +1,8 @@
 import { createActor, fromPromise } from "xstate";
 import { createBrowserInspector } from '@statelyai/inspect';
 
+import { delay } from "@/utils/time-utils";
+
 import { gameplayMachine } from "./fsm";
 import { GameService } from "../game-service";
 
@@ -14,6 +16,7 @@ function createGameplay() {
     actions: {},
     actors: {
       getGameJoinData: fromPromise(async () => {
+        await delay(2000);
         const data = await service.connect();
         return { ... data };
       })

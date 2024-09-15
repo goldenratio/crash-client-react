@@ -6,13 +6,15 @@ import { GameCanvasArea } from './components/GameCanvasArea';
 import { ThemeProvider } from './components/ThemeProvider';
 
 import { gameplay } from './models/gameplay/gameplay';
+import { UserTitle } from './components/UserTitle';
 
 gameplay;
 
 function App() {
 
   return (
-    <ThemeProvider defaultTheme="dark" storageKey="crash-client-ui-theme">
+    <ThemeProvider defaultTheme="dark">
+      <UserTitle />
       <RoundHistory />
       <GameCanvasArea />
       <BetArea />
