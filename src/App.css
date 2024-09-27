@@ -55,10 +55,122 @@
   background-color: #38c415;
 }
 
+.bet-area-cancel-button {
+  background-color: #a7281e;
+  outline: 2px solid #d65b52;
+  float: left;
+  width: 100%;
+  min-height: 80px;
+  height: 100%;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.bet-area-crash-button {
+  background-color: #305cd4;
+  outline: 2px solid #577de7;
+  float: left;
+  width: 100%;
+  min-height: 80px;
+  height: 100%;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
 .game-canvas-container {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   height: 400px;
+}
+
+.timer-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  z-index: 9999; /* Ensure it's on top of other elements */
+  /* background: rgba(255, 255, 255, 0.1); */
+  pointer-events: none;
+}
+
+.timer-container svg {
+  position: relative;
+  transform: rotate(-90deg); /* To make the circle start from the top */
+}
+
+.circle-progress {
+  transform-origin: center;
+  transition: stroke-dashoffset 1s linear;
+}
+
+/* Animation for color change from green to red */
+@keyframes colorChange {
+  0% {
+    stroke: rgb(0, 255, 0); /* Green */
+  }
+  100% {
+    stroke: rgb(255, 0, 0); /* Red */
+  }
+}
+
+.time-left {
+  position: absolute;
+  font-size: 24px;
+  font-weight: bold;
+  color: #ffffff;
+}
+
+.time-info-text {
+  position: absolute;
+  font-size: 20px;
+  font-weight: bold;
+  color: #ffffff;
+  top: 120px;
+  width: 200px;
+}
+
+.top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #272727;
+  color: #fff;
+  padding: 10px 10px 10px 10px;
+  border-radius: 0.50rem 0.50rem 0rem 0rem;
+}
+
+.user-title-bar {
+  background-color: #1f1f1f;
+  color: #fff;
+  border-radius: 0rem 0rem 0.50rem 0.50rem;
+  padding: 6px;
+}
+
+.top-bar-logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.top-bar-content {
+  display: flex;
+  align-items: center;
+  font-size: 1.2rem;
+}
+
+.top-bar-content img {
+  margin-right: 5px;
+}
+
+.multiplier-value {
+  font-size: 70px;
+  color: #fff;
+  font-weight: bold;
 }

@@ -22,6 +22,7 @@ import { unwrap } from "../assert-utils";
 import { DisposeBag } from "../dispose-bag";
 import {
   type AuthResponseType,
+  BettingTimerStartedData,
   type BettingTimerUpdateData,
   type ConnectionClosedData,
   type CrashOutResultData,
@@ -47,8 +48,9 @@ export class CommsManager {
   private readonly _gameUpdateSubject$ = new Subject<GameUpdateData>();
   private readonly _gameFinishedSubject$ = new Subject<GameFinishedData>();
   private readonly _crashOutResult$ = new Subject<CrashOutResultData>();
-  private readonly _bettingTimerStartedSubject$ = new Subject<BettingTimerUpdateData>();
+  private readonly _bettingTimerStartedSubject$ = new Subject<BettingTimerStartedData>();
   private readonly _bettingTimerUpdateSubject$ = new Subject<BettingTimerUpdateData>();
+  private readonly _bettingTimerFinishedSubject$ = new Subject<void>();
   private readonly _remotePlayerJoined$ = new Subject<RemotePlayerJoinedData>();
   private readonly _remotePlayerLeft$ = new Subject<RemotePlayerLeftData>();
   private readonly _remotePlayerBetsPlaced$ = new Subject<RemotePlayerBetsPlacedData>();
@@ -169,14 +171,18 @@ export class CommsManager {
             const data = BettingTimerStarted.getRootAsBettingTimerStarted(buffer);
             const msg: BettingTimerStarted = gameResponseEvent.msg(data);
             console.log({ bettingTimeLeft: msg.bettingTimeLeft(), roundId: msg.roundId() });
-            this._bettingTimerStartedSubject$.next({ bettingTimeLeft: msg.bettingTimeLeft(), roundId: msg.roundId() });
+            this._bettingTimerStartedSubject$.next({ bettingTimeLeft: msg.bettingTimeLeft(), roundId: msg.roundId().toString() });
             break;
           }
 
           case ResponseMessage.BettingTimerUpdate: {
             const data = BettingTimerUpdate.getRootAsBettingTimerUpdate(buffer);
             const msg: BettingTimerUpdate = gameResponseEvent.msg(data);
-            this._bettingTimerUpdateSubject$.next({ bettingTimeLeft: msg.bettingTimeLeft(), roundId: 0 });
+            const bettingTimeLeft = msg.bettingTimeLeft();
+            this._bettingTimerUpdateSubject$.next({ bettingTimeLeft: bettingTimeLeft });
+            if (bettingTimeLeft <= 0) {
+              this._bettingTimerFinishedSubject$.next();
+            }
             break;
           }
 
@@ -236,7 +242,7 @@ export class CommsManager {
     this._disposeBag.dispose();
   }
 
-  placeBet(betAmount: number): void {
+  placeBetRequest(betAmount: number): void {
     const builder = new Builder(0);
     builder.clear();
 
@@ -252,7 +258,7 @@ export class CommsManager {
     this.socket.send(bytes);
   }
 
-  crashOut(): void {
+  crashOutRequest(): void {
     const builder = new Builder(0);
     builder.clear();
 
@@ -315,12 +321,16 @@ export class CommsManager {
     return this._crashOutResult$.asObservable();
   }
 
-  get bettingTimerStarted$(): Observable<BettingTimerUpdateData> {
+  get bettingTimerStarted$(): Observable<BettingTimerStartedData> {
     return this._bettingTimerStartedSubject$.asObservable();
   }
 
   get bettingTimerLeft$(): Observable<BettingTimerUpdateData> {
     return this._bettingTimerUpdateSubject$.asObservable();
+  }
+
+  get bettingTimerFinished$(): Observable<void> {
+    return this._bettingTimerFinishedSubject$.asObservable();
   }
 
   get remotePlayerJoined$(): Observable<RemotePlayerJoinedData> {

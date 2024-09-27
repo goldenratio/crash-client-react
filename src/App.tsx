@@ -6,7 +6,7 @@ import { GameCanvasArea } from './components/GameCanvasArea';
 import { ThemeProvider } from './components/ThemeProvider';
 
 import { gameplay } from './models/gameplay/gameplay';
-import { UserTitle } from './components/UserTitle';
+import { TopBar } from './components/TopBar';
 
 gameplay;
 
@@ -14,7 +14,7 @@ function App() {
 
   return (
     <ThemeProvider defaultTheme="dark">
-      <UserTitle />
+      <TopBar />
       <RoundHistory />
       <GameCanvasArea />
       <BetArea />

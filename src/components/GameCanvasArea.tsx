@@ -1,42 +1,39 @@
+import { useMemo } from "react";
 import { useSelector } from "@xstate/react";
-import { roundToTwoDecimals } from "@/utils/math-utils";
+
 import { gameplay } from "@/models/gameplay/gameplay";
+import { GameplayMachineSnapshot } from "@/models/gameplay/fsm";
 
 import { Card } from "./ui/card";
-import { useMemo } from "react";
+import { BettingTimer } from "./BettingTimer";
 
-const selectGameState = (snapshot: any): string => {
-  return snapshot.value;
+const selectMultiplierValue = (snapshot: GameplayMachineSnapshot): number => {
+  return snapshot.context.multiplierResult;
 }
 
-const selectMultiplierValue = (snapshot: any): number => {
-  return snapshot.context.multiplerResult;
+const setShowMultiplier = (snapshot: GameplayMachineSnapshot): boolean => {
+  const state = snapshot.value as string;
+  return state !== 'betInProgress';
 }
 
 export function GameCanvasArea() {
-  const gameStateValue = useSelector(gameplay, selectGameState);
   const multiplierValue = useSelector(gameplay, selectMultiplierValue);
-
+  const showMultiplier = useSelector(gameplay, setShowMultiplier);
   // Memoize the GameArea and Multiplier to prevent unnecessary re-renders
-  const gameArea = useMemo(() => {
-    return <div id="canvas-stage">GameArea {roundToTwoDecimals(Math.random())}</div>;
-  }, []); // Empty dependency array ensures it is only rendered once
+  // const gameArea = useMemo(() => {
+  //   return <div id="canvas-stage">GameArea {roundToTwoDecimals(Math.random()).toFixed(2)}</div>;
+  // }, []); // Empty dependency array ensures it is only rendered once
 
   const multiplier = useMemo(() => {
-    return <div>Multiplier: {multiplierValue}x</div>;
-  }, [multiplierValue]); // Empty dependency array ensures it is only rendered once
-
-  const gameState = useMemo(() => {
-    return <div>GameState: {gameStateValue}</div>;
-  }, [gameStateValue]); // Empty dependency array ensures it is only rendered once
+    return showMultiplier ? <div className="multiplier-value">{multiplierValue.toFixed(2)}x</div> : null;
+  }, [multiplierValue, showMultiplier]); // Empty dependency array ensures it is only rendered once
 
 
   return (
     <Card className="relative w-full overflow-hidden p-1 my-2">
       <div className="game-canvas-container">
-        {gameArea}
         {multiplier}
-        {gameState}
+        <BettingTimer />
       </div>
     </Card>
   )
