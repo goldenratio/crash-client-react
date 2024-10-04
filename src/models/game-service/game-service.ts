@@ -1,7 +1,8 @@
-import { Observable } from "rxjs";
-import { BettingTimerStartedData, BettingTimerUpdateData, CommsManager, GameFinishedData, GameJoinedData, GameUpdateData } from "@/utils/comms-manager";
+import { Observable, take } from "rxjs";
+import { BetActionResultData, BettingTimerStartedData, BettingTimerUpdateData, CommsManager, CrashOutResultData, GameFinishedData, GameJoinedData, GameUpdateData } from "@/utils/comms-manager";
 
 import { DisposeBag, type Disposable } from "../../utils/dispose-bag";
+import { resolve } from "path";
 
 export class GameService implements Disposable {
   private readonly _commsManager: CommsManager;
@@ -29,8 +30,31 @@ export class GameService implements Disposable {
     this._disposeBag.dispose();
   }
 
-  placeBetRequest(betAmount: number): void {
-    this._commsManager.placeBetRequest(betAmount);
+  placeBetRequest(betAmount: number): Promise<BetActionResultData> {
+    return new Promise<BetActionResultData>(resolve => {
+      this._commsManager.placeBetRequest(betAmount);
+      this._disposeBag.completable$(this._commsManager.betActionResult$.pipe(take(1))).subscribe(result => {
+        resolve(result);
+      });
+    });
+
+  }
+
+  crashOutRequest(): Promise<CrashOutResultData> {
+    return new Promise<CrashOutResultData>(resolve => {
+      this._commsManager.crashOutRequest();
+      this._disposeBag.completable$(this._commsManager.crashOutResult$.pipe(take(1))).subscribe(result => {
+        resolve(result);
+      });
+    });
+  }
+
+  get betActionResult$(): Observable<BetActionResultData> {
+    return this._commsManager.betActionResult$;
+  }
+
+  get crashOutResult$(): Observable<CrashOutResultData> {
+    return this._commsManager.crashOutResult$;
   }
 
   get bettingTimerStarted$(): Observable<BettingTimerStartedData> {

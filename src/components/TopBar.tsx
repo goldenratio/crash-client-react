@@ -18,7 +18,7 @@ export function TopBar() {
     <Card className="relative w-full p-1 mb-2">
       <div className="top-bar">
         <div className="top-bar-logo">
-          <span className="logo-text">Game Name</span>
+          <span className="logo-text">Crash Game</span>
         </div>
         <div className="top-bar-content">
           <Button variant="secondary">

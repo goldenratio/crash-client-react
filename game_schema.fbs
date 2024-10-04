@@ -64,6 +64,18 @@ table CrashOutResponse {
   balance: uint64;
 }
 
+table CrashOutError {
+  code: uint8;
+}
+
+table BetResponse {
+  balance: uint64;
+}
+
+table BetError {
+  code: uint8;
+}
+
 table GameStarted {}
 
 table GameUpdate {
@@ -77,8 +89,9 @@ table GameError {}
 union ResponseMessage {
   JoinGameResponse,
   BettingTimerStarted, BettingTimerUpdate,
+  BetResponse, BetError,
   GameStarted, GameUpdate, GameFinished, GameError,
-  CrashOutResponse,
+  CrashOutResponse, CrashOutError,
   RemotePlayerJoined, RemotePlayerLeft, RemotePlayerBetsPlaced, RemotePlayerCrashOut
 }
 

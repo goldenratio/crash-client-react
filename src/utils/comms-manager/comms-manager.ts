@@ -2,6 +2,7 @@ import { Builder, ByteBuffer } from "flatbuffers";
 import { type Observable, Subject, fromEvent } from "rxjs";
 import {
   BetRequest,
+  BetResponse,
   BettingTimerStarted,
   BettingTimerUpdate,
   CrashOutRequest,
@@ -22,6 +23,7 @@ import { unwrap } from "../assert-utils";
 import { DisposeBag } from "../dispose-bag";
 import {
   type AuthResponseType,
+  BetActionResultData,
   BettingTimerStartedData,
   type BettingTimerUpdateData,
   type ConnectionClosedData,
@@ -48,6 +50,7 @@ export class CommsManager {
   private readonly _gameUpdateSubject$ = new Subject<GameUpdateData>();
   private readonly _gameFinishedSubject$ = new Subject<GameFinishedData>();
   private readonly _crashOutResult$ = new Subject<CrashOutResultData>();
+  private readonly _betActionResult$ = new Subject<BetActionResultData>();
   private readonly _bettingTimerStartedSubject$ = new Subject<BettingTimerStartedData>();
   private readonly _bettingTimerUpdateSubject$ = new Subject<BettingTimerUpdateData>();
   private readonly _bettingTimerFinishedSubject$ = new Subject<void>();
@@ -160,10 +163,16 @@ export class CommsManager {
             break;
           }
 
+          case ResponseMessage.BetResponse:
+            const data = BetResponse.getRootAsBetResponse(buffer);
+            const msg: BetResponse = gameResponseEvent.msg(data);
+            this._betActionResult$.next({ balance: Number(msg.balance()) });
+            break;
+
           case ResponseMessage.CrashOutResponse: {
             const data = CrashOutResponse.getRootAsCrashOutResponse(buffer);
             const msg: CrashOutResponse = gameResponseEvent.msg(data);
-            this._crashOutResult$.next({ winAmount: Number(msg.winAmount()), multiplier: msg.multiplier() / 100 });
+            this._crashOutResult$.next({ winAmount: Number(msg.winAmount()), multiplier: msg.multiplier() / 100, balance: Number(msg.balance()) });
             break;
           }
 
@@ -319,6 +328,10 @@ export class CommsManager {
 
   get crashOutResult$(): Observable<CrashOutResultData> {
     return this._crashOutResult$.asObservable();
+  }
+
+  get betActionResult$(): Observable<BetActionResultData> {
+    return this._betActionResult$.asObservable();
   }
 
   get bettingTimerStarted$(): Observable<BettingTimerStartedData> {

@@ -9,7 +9,9 @@ const EventType = {} as
   | { type: 'BETTING_TIMER_STARTED'; timeLeft: number; roundId: string }
   | { type: 'BETTING_TIMER_UPDATE'; timeLeft: number }
   | { type: 'PLACE_BETS'; betAmount: number }
+  | { type: 'BET_ACTION_RESULT'; balance: number }
   | { type: 'CRASH_OUT' }
+  | { type: 'CRASH_OUT_RESULT'; balance: number; winAmount: number }
   | { type: 'GAME_ROUND_UPDATE'; multiplier: number }
   | { type: 'GAME_ROUND_FINISHED' };
 
@@ -109,13 +111,18 @@ export const gameplayMachine = createMachine({
             }),
             { type: 'placeBetRequest' }
           ]
+        },
+        BET_ACTION_RESULT: {
+          actions: assign({
+            balance: ({ event }) => event.balance
+          })
         }
       }
     },
 
     gameRoundInProgress: {
       on: {
-        CRASH_OUT: { target: 'gameRoundInProgressCrashOut' },
+        CRASH_OUT: { actions: [{ type: 'crashOutRequest' }], target: 'gameRoundInProgressCrashOut' },
         GAME_ROUND_UPDATE: {
           actions: assign({
             multiplierResult: ({ event }) => event.multiplier
@@ -131,7 +138,12 @@ export const gameplayMachine = createMachine({
           actions: assign({
             multiplierResult: ({ event }) => event.multiplier
           }),
-         },
+        },
+        CRASH_OUT_RESULT: {
+          actions: assign({
+            balance: ({ event }) => event.balance
+          })
+        },
         GAME_ROUND_FINISHED: { target: 'gameRoundFinished' },
       }
     },
