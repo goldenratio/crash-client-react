@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 echo "generate schema!"
 if ! command -v flatc &> /dev/null
 then
